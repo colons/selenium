@@ -22,11 +22,13 @@ from selenium.common.exceptions import (
     NoSuchElementException,
     WebDriverException)
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from test.selenium.webdriver.common.webserver import Pages
 
 
-def test_get_title(driver, pages):
+def test_get_title(driver: WebDriver, pages: Pages) -> None:
     pages.load("simpleTest.html")
     title = driver.title
     assert "Hello WebDriver" == title
@@ -38,67 +40,67 @@ def test_get_current_url(driver, pages, webserver):
     assert webserver.where_is('simpleTest.html') == url
 
 
-def test_find_element_by_xpath(driver, pages):
+def test_find_element_by_xpath(driver: WebDriver, pages: Pages) -> None:
     pages.load("simpleTest.html")
     elem = driver.find_element(By.XPATH, "//h1")
     assert "Heading" == elem.text
 
 
-def test_find_element_by_xpath_throw_no_such_element_exception(driver, pages):
+def test_find_element_by_xpath_throw_no_such_element_exception(driver: WebDriver, pages: Pages) -> None:
     pages.load("simpleTest.html")
     with pytest.raises(NoSuchElementException):
         driver.find_element(By.XPATH, "//h4")
 
 
-def test_find_elements_by_xpath(driver, pages):
+def test_find_elements_by_xpath(driver: WebDriver, pages: Pages) -> None:
     pages.load("nestedElements.html")
     elems = driver.find_elements(By.XPATH, "//option")
     assert 48 == len(elems)
     assert "One" == elems[0].get_attribute("value")
 
 
-def test_find_elements_by_name(driver, pages):
+def test_find_elements_by_name(driver: WebDriver, pages: Pages) -> None:
     pages.load("xhtmlTest.html")
     elem = driver.find_element(By.NAME, "windowOne")
     assert "Open new window" == elem.text
 
 
-def test_find_elements_by_name_in_element_context(driver, pages):
+def test_find_elements_by_name_in_element_context(driver: WebDriver, pages: Pages) -> None:
     pages.load("nestedElements.html")
     elem = driver.find_element(By.NAME, "form2")
     sub_elem = elem.find_element(By.NAME, "selectomatic")
     assert "2" == sub_elem.get_attribute("id")
 
 
-def test_find_elements_by_link_text_in_element_context(driver, pages):
+def test_find_elements_by_link_text_in_element_context(driver: WebDriver, pages: Pages) -> None:
     pages.load("nestedElements.html")
     elem = driver.find_element(By.NAME, "div1")
     sub_elem = elem.find_element(By.LINK_TEXT, "hello world")
     assert "link1" == sub_elem.get_attribute("name")
 
 
-def test_find_element_by_id_in_element_context(driver, pages):
+def test_find_element_by_id_in_element_context(driver: WebDriver, pages: Pages) -> None:
     pages.load("nestedElements.html")
     elem = driver.find_element(By.NAME, "form2")
     sub_elem = elem.find_element(By.ID, "2")
     assert "selectomatic" == sub_elem.get_attribute("name")
 
 
-def test_find_element_by_xpath_in_element_context(driver, pages):
+def test_find_element_by_xpath_in_element_context(driver: WebDriver, pages: Pages) -> None:
     pages.load("nestedElements.html")
     elem = driver.find_element(By.NAME, "form2")
     sub_elem = elem.find_element(By.XPATH, "select")
     assert "2" == sub_elem.get_attribute("id")
 
 
-def test_find_element_by_xpath_in_element_context_not_found(driver, pages):
+def test_find_element_by_xpath_in_element_context_not_found(driver: WebDriver, pages: Pages) -> None:
     pages.load("nestedElements.html")
     elem = driver.find_element(By.NAME, "form2")
     with pytest.raises(NoSuchElementException):
         elem.find_element(By.XPATH, "div")
 
 
-def test_should_be_able_to_enter_data_into_form_fields(driver, pages):
+def test_should_be_able_to_enter_data_into_form_fields(driver: WebDriver, pages: Pages) -> None:
     pages.load("xhtmlTest.html")
     elem = driver.find_element(By.XPATH, "//form[@name='someForm']/input[@id='username']")
     elem.clear()
@@ -107,7 +109,7 @@ def test_should_be_able_to_enter_data_into_form_fields(driver, pages):
     assert "some text" == elem.get_attribute("value")
 
 
-def test_find_element_by_tag_name(driver, pages):
+def test_find_element_by_tag_name(driver: WebDriver, pages: Pages) -> None:
     pages.load("simpleTest.html")
     elems = driver.find_elements(By.TAG_NAME, "div")
     num_by_xpath = len(driver.find_elements(By.XPATH, "//div"))
@@ -116,14 +118,14 @@ def test_find_element_by_tag_name(driver, pages):
     assert 0 == len(elems)
 
 
-def test_find_element_by_tag_name_within_element(driver, pages):
+def test_find_element_by_tag_name_within_element(driver: WebDriver, pages: Pages) -> None:
     pages.load("simpleTest.html")
     div = driver.find_element(By.ID, "multiline")
     elems = div.find_elements(By.TAG_NAME, "p")
     assert len(elems) == 1
 
 
-def test_switch_frame_by_name(driver, pages):
+def test_switch_frame_by_name(driver: WebDriver, pages: Pages) -> None:
     pages.load("frameset.html")
     driver.switch_to.frame(driver.find_element(By.NAME, "third"))
     checkbox = driver.find_element(By.ID, "checky")
@@ -131,7 +133,7 @@ def test_switch_frame_by_name(driver, pages):
     checkbox.submit()
 
 
-def test_is_enabled(driver, pages):
+def test_is_enabled(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     elem = driver.find_element(By.XPATH, "//input[@id='working']")
     assert elem.is_enabled()
@@ -139,7 +141,7 @@ def test_is_enabled(driver, pages):
     assert not elem.is_enabled()
 
 
-def test_is_selected_and_toggle(driver, pages):
+def test_is_selected_and_toggle(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     elem = driver.find_element(By.ID, "multi")
     option_elems = elem.find_elements(By.XPATH, "option")
@@ -151,7 +153,7 @@ def test_is_selected_and_toggle(driver, pages):
     assert option_elems[2].is_selected()
 
 
-def test_navigate(driver, pages):
+def test_navigate(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     driver.find_element(By.ID, "imageButton").submit()
     WebDriverWait(driver, 3).until(EC.title_is("We Arrive Here"))
@@ -161,7 +163,7 @@ def test_navigate(driver, pages):
     assert "We Arrive Here" == driver.title
 
 
-def test_get_attribute(driver, pages):
+def test_get_attribute(driver: WebDriver, pages: Pages) -> None:
     url = pages.url('xhtmlTest.html')
     driver.get(url)
     elem = driver.find_element(By.ID, "id1")
@@ -169,7 +171,7 @@ def test_get_attribute(driver, pages):
     assert f'{url}#' == attr
 
 
-def test_get_implicit_attribute(driver, pages):
+def test_get_implicit_attribute(driver: WebDriver, pages: Pages) -> None:
     pages.load("nestedElements.html")
     elems = driver.find_elements(By.XPATH, "//option")
     assert len(elems) >= 3
@@ -177,7 +179,7 @@ def test_get_implicit_attribute(driver, pages):
         assert i == int(elem.get_attribute("index"))
 
 
-def test_get_dom_attribute(driver, pages):
+def test_get_dom_attribute(driver: WebDriver, pages: Pages) -> None:
     url = pages.url('formPage.html')
     driver.get(url)
     elem = driver.find_element(By.ID, "vsearchGadget")
@@ -185,7 +187,7 @@ def test_get_dom_attribute(driver, pages):
     assert "4" == attr
 
 
-def test_get_property(driver, pages):
+def test_get_property(driver: WebDriver, pages: Pages) -> None:
     url = pages.url('formPage.html')
     driver.get(url)
     elem = driver.find_element(By.ID, "withText")
@@ -193,45 +195,45 @@ def test_get_property(driver, pages):
     assert "Example text" == prop
 
 
-def test_execute_simple_script(driver, pages):
+def test_execute_simple_script(driver: WebDriver, pages: Pages) -> None:
     pages.load("xhtmlTest.html")
     title = driver.execute_script("return document.title;")
     assert "XHTML Test Page" == title
 
 
-def test_execute_script_and_return_element(driver, pages):
+def test_execute_script_and_return_element(driver: WebDriver, pages: Pages) -> None:
     pages.load("xhtmlTest.html")
     elem = driver.execute_script("return document.getElementById('id1');")
     assert "WebElement" in str(type(elem))
 
 
-def test_execute_script_with_args(driver, pages):
+def test_execute_script_with_args(driver: WebDriver, pages: Pages) -> None:
     pages.load("xhtmlTest.html")
     result = driver.execute_script("return arguments[0] == 'fish' ? 'fish' : 'not fish';", "fish")
     assert "fish" == result
 
 
-def test_execute_script_with_multiple_args(driver, pages):
+def test_execute_script_with_multiple_args(driver: WebDriver, pages: Pages) -> None:
     pages.load("xhtmlTest.html")
     result = driver.execute_script(
         "return arguments[0] + arguments[1]", 1, 2)
     assert 3 == result
 
 
-def test_execute_script_with_element_args(driver, pages):
+def test_execute_script_with_element_args(driver: WebDriver, pages: Pages) -> None:
     pages.load("javascriptPage.html")
     button = driver.find_element(By.ID, "plainButton")
     result = driver.execute_script("arguments[0]['flibble'] = arguments[0].getAttribute('id'); return arguments[0]['flibble'];", button)
     assert "plainButton" == result
 
 
-def test_find_elements_by_partial_link_text(driver, pages):
+def test_find_elements_by_partial_link_text(driver: WebDriver, pages: Pages) -> None:
     pages.load("xhtmlTest.html")
     elem = driver.find_element(By.PARTIAL_LINK_TEXT, "new window")
     elem.click()
 
 
-def test_is_element_displayed(driver, pages):
+def test_is_element_displayed(driver: WebDriver, pages: Pages) -> None:
     pages.load("javascriptPage.html")
     visible = driver.find_element(By.ID, "displayed").is_displayed()
     not_visible = driver.find_element(By.ID, "hidden").is_displayed()
@@ -240,7 +242,7 @@ def test_is_element_displayed(driver, pages):
 
 
 @pytest.mark.xfail_chrome
-def test_move_window_position(driver, pages):
+def test_move_window_position(driver: WebDriver, pages: Pages) -> None:
     pages.load("blank.html")
     loc = driver.get_window_position()
     # note can't test 0,0 since some OS's dont allow that location
@@ -257,7 +259,7 @@ def test_move_window_position(driver, pages):
     assert loc['y'] == new_y
 
 
-def test_change_window_size(driver, pages):
+def test_change_window_size(driver: WebDriver, pages: Pages) -> None:
     pages.load("blank.html")
     size = driver.get_window_size()
     newSize = [600, 600]
@@ -274,7 +276,7 @@ def test_change_window_size(driver, pages):
 @pytest.mark.xfail_firefox(raises=WebDriverException)
 @pytest.mark.xfail_remote
 @pytest.mark.xfail_safari
-def test_get_log_types(driver, pages):
+def test_get_log_types(driver: WebDriver, pages: Pages) -> None:
     pages.load("blank.html")
     assert isinstance(driver.log_types, list)
 
@@ -282,7 +284,7 @@ def test_get_log_types(driver, pages):
 @pytest.mark.xfail_firefox(raises=WebDriverException)
 @pytest.mark.xfail_remote
 @pytest.mark.xfail_safari
-def test_get_log(driver, pages):
+def test_get_log(driver: WebDriver, pages: Pages) -> None:
     pages.load("blank.html")
     for log_type in driver.log_types:
         log = driver.get_log(log_type)

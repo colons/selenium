@@ -18,10 +18,12 @@
 import pytest
 
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
+from test.selenium.webdriver.common.webserver import Pages
 
 
 @pytest.mark.xfail_ie
-def test_should_be_able_to_click_on_elements_with_opacity_zero(driver, pages):
+def test_should_be_able_to_click_on_elements_with_opacity_zero(driver: WebDriver, pages: Pages) -> None:
     pages.load("click_jacker.html")
     element = driver.find_element(By.ID, "clickJacker")
     assert '0' == element.value_of_css_property("opacity"), \
@@ -32,7 +34,7 @@ def test_should_be_able_to_click_on_elements_with_opacity_zero(driver, pages):
 
 
 @pytest.mark.xfail_ie
-def test_should_be_able_to_select_options_from_an_invisible_select(driver, pages):
+def test_should_be_able_to_select_options_from_an_invisible_select(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     select = driver.find_element(By.ID, "invisi_select")
     options = select.find_elements(By.TAG_NAME, "option")

@@ -18,9 +18,11 @@
 import pytest
 
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
+from test.selenium.webdriver.common.webserver import Pages
 
 
-def test_should_be_able_to_determine_the_location_of_an_element(driver, pages):
+def test_should_be_able_to_determine_the_location_of_an_element(driver: WebDriver, pages: Pages) -> None:
     pages.load("xhtmlTest.html")
     location = driver.find_element(By.ID, "username").location_once_scrolled_into_view
     assert location["x"] > 0
@@ -42,14 +44,14 @@ def test_should_get_coordinates_of_an_element(page, driver, pages):
 
 
 @pytest.mark.xfail_safari
-def test_should_get_coordinates_of_an_invisible_element(driver, pages):
+def test_should_get_coordinates_of_an_invisible_element(driver: WebDriver, pages: Pages) -> None:
     pages.load("coordinates_tests/page_with_invisible_element.html")
     element = driver.find_element(By.ID, "box")
     _check_location(element.location_once_scrolled_into_view, x=0, y=0)
     _check_location(element.location, x=0, y=0)
 
 
-def test_should_scroll_page_and_get_coordinates_of_an_element_that_is_out_of_view_port(driver, pages):
+def test_should_scroll_page_and_get_coordinates_of_an_element_that_is_out_of_view_port(driver: WebDriver, pages: Pages) -> None:
     pages.load("coordinates_tests/page_with_element_out_of_view.html")
     element = driver.find_element(By.ID, "box")
     windowHeight = driver.get_window_size()["height"]
@@ -63,7 +65,7 @@ def test_should_scroll_page_and_get_coordinates_of_an_element_that_is_out_of_vie
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_remote
 @pytest.mark.xfail_safari
-def test_should_get_coordinates_of_an_element_in_aframe(driver, pages):
+def test_should_get_coordinates_of_an_element_in_aframe(driver: WebDriver, pages: Pages) -> None:
     pages.load("coordinates_tests/element_in_frame.html")
     driver.switch_to.frame(driver.find_element(By.NAME, "ifr"))
     element = driver.find_element(By.ID, "box")
@@ -76,7 +78,7 @@ def test_should_get_coordinates_of_an_element_in_aframe(driver, pages):
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_remote
 @pytest.mark.xfail_safari
-def test_should_get_coordinates_of_an_element_in_anested_frame(driver, pages):
+def test_should_get_coordinates_of_an_element_in_anested_frame(driver: WebDriver, pages: Pages) -> None:
     pages.load("coordinates_tests/element_in_nested_frame.html")
     driver.switch_to.frame(driver.find_element(By.NAME, "ifr"))
     driver.switch_to.frame(driver.find_element(By.NAME, "ifr"))
@@ -85,7 +87,7 @@ def test_should_get_coordinates_of_an_element_in_anested_frame(driver, pages):
     _check_location(element.location, x=10, y=10)
 
 
-def test_should_get_coordinates_of_an_element_with_fixed_position(driver, pages):
+def test_should_get_coordinates_of_an_element_with_fixed_position(driver: WebDriver, pages: Pages) -> None:
     pages.load("coordinates_tests/page_with_fixed_element.html")
     element = driver.find_element(By.ID, "fixed")
     _check_location(element.location_once_scrolled_into_view, y=0)
@@ -96,7 +98,7 @@ def test_should_get_coordinates_of_an_element_with_fixed_position(driver, pages)
     assert element.location["y"] > 0
 
 
-def test_should_correctly_identify_that_an_element_has_width_and_height(driver, pages):
+def test_should_correctly_identify_that_an_element_has_width_and_height(driver: WebDriver, pages: Pages) -> None:
     pages.load("xhtmlTest.html")
     shrinko = driver.find_element(By.ID, "linkId")
     size = shrinko.size

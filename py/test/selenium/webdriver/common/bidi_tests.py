@@ -17,14 +17,16 @@
 from selenium.common.exceptions import InvalidSelectorException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.log import Log
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from test.selenium.webdriver.common.webserver import Pages
 
 import pytest
 
 
 @pytest.mark.xfail_safari
-async def test_check_console_messages(driver, pages):
+async def test_check_console_messages(driver: WebDriver, pages: Pages) -> None:
     async with driver.bidi_connection() as session:
         log = Log(driver, session)
         pages.load("javascriptPage.html")
@@ -35,7 +37,7 @@ async def test_check_console_messages(driver, pages):
 
 
 @pytest.mark.xfail_safari
-async def test_check_error_console_messages(driver, pages):
+async def test_check_error_console_messages(driver: WebDriver, pages: Pages) -> None:
     async with driver.bidi_connection() as session:
         log = Log(driver, session)
         pages.load("javascriptPage.html")
@@ -49,7 +51,7 @@ async def test_check_error_console_messages(driver, pages):
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_safari
 @pytest.mark.xfail_remote
-async def test_collect_js_exceptions(driver, pages):
+async def test_collect_js_exceptions(driver: WebDriver, pages: Pages) -> None:
     async with driver.bidi_connection() as session:
         log = Log(driver, session)
         pages.load("javascriptPage.html")
@@ -62,7 +64,7 @@ async def test_collect_js_exceptions(driver, pages):
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_safari
 @pytest.mark.xfail_remote
-async def test_collect_log_mutations(driver, pages):
+async def test_collect_log_mutations(driver: WebDriver, pages: Pages) -> None:
     async with driver.bidi_connection() as session:
         log = Log(driver, session)
         async with log.mutation_events() as event:

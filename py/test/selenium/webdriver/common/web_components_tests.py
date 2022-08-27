@@ -19,14 +19,16 @@ import pytest
 
 from selenium.common.exceptions import NoSuchShadowRootException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.remote.shadowroot import ShadowRoot
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.remote.webelement import WebElement
+from test.selenium.webdriver.common.webserver import Pages
 
 
 @pytest.mark.xfail_safari
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_remote
-def test_can_get_the_shadow_root_of_an_element(driver, pages):
+def test_can_get_the_shadow_root_of_an_element(driver: WebDriver, pages: Pages) -> None:
     pages.load("webComponents.html")
     shadow_root = driver.find_element(By.CSS_SELECTOR, "custom-checkbox-element").shadow_root
     assert isinstance(shadow_root, ShadowRoot)
@@ -35,7 +37,7 @@ def test_can_get_the_shadow_root_of_an_element(driver, pages):
 @pytest.mark.xfail_safari
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_remote
-def test_no_such_shadow_root_thrown_when_no_shadow_root(driver, pages):
+def test_no_such_shadow_root_thrown_when_no_shadow_root(driver: WebDriver, pages: Pages) -> None:
     with pytest.raises(NoSuchShadowRootException):
         pages.load("simpleTest.html")
         driver.find_element(By.CSS_SELECTOR, "div").shadow_root
@@ -44,7 +46,7 @@ def test_no_such_shadow_root_thrown_when_no_shadow_root(driver, pages):
 @pytest.mark.xfail_safari
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_remote
-def test_returns_shadow_root_via_execute_script(driver, pages):
+def test_returns_shadow_root_via_execute_script(driver: WebDriver, pages: Pages) -> None:
     pages.load("webComponents.html")
     custom_element = driver.find_element(By.CSS_SELECTOR, "custom-checkbox-element")
     shadow_root = custom_element.shadow_root
@@ -55,7 +57,7 @@ def test_returns_shadow_root_via_execute_script(driver, pages):
 @pytest.mark.xfail_safari
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_remote
-def test_can_find_element_in_a_shadowroot(driver, pages):
+def test_can_find_element_in_a_shadowroot(driver: WebDriver, pages: Pages) -> None:
     pages.load("webComponents.html")
     custom_element = driver.find_element(By.CSS_SELECTOR, "custom-checkbox-element")
     shadow_root = custom_element.shadow_root
@@ -67,7 +69,7 @@ def test_can_find_element_in_a_shadowroot(driver, pages):
 @pytest.mark.xfail_safari
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_remote
-def test_can_find_elements_in_a_shadow_root(driver, pages):
+def test_can_find_elements_in_a_shadow_root(driver: WebDriver, pages: Pages) -> None:
     pages.load("webComponents.html")
     custom_element = driver.find_element(By.CSS_SELECTOR, "custom-checkbox-element")
     shadow_root = custom_element.shadow_root

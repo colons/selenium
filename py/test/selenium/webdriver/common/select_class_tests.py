@@ -20,8 +20,10 @@ import pytest
 from selenium.common.exceptions import (
     NoSuchElementException,
     UnexpectedTagNameException)
-from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.support.ui import Select
+from test.selenium.webdriver.common.webserver import Pages
 
 disabledSelect = {'name': 'no-select', 'values': ['Foo']}
 singleSelectValues1 = {'name': 'selectomatic', 'values': ['One', 'Two', 'Four', 'Still learning how to count, apparently']}
@@ -31,7 +33,7 @@ multiSelectValues1 = {'name': 'multi', 'values': ['Eggs', 'Ham', 'Sausages', 'On
 multiSelectValues2 = {'name': 'select_empty_multiple', 'values': ['select_1', 'select_2', 'select_3', 'select_4']}
 
 
-def test_select_by_index_single(driver, pages):
+def test_select_by_index_single(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
 
     for select in [singleSelectValues1]:
@@ -43,7 +45,7 @@ def test_select_by_index_single(driver, pages):
 
 @pytest.mark.xfail_firefox(reason='https://bugzilla.mozilla.org/show_bug.cgi?id=1429403')
 @pytest.mark.xfail_remote
-def test_select_disabled_by_index(driver, pages):
+def test_select_disabled_by_index(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     sel = Select(driver.find_element(By.NAME, disabledSelect['name']))
     selected = sel.first_selected_option
@@ -51,7 +53,7 @@ def test_select_disabled_by_index(driver, pages):
     assert selected == sel.first_selected_option
 
 
-def test_select_by_value_single(driver, pages):
+def test_select_by_value_single(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     for select in [singleSelectValues1]:
         sel = Select(driver.find_element(By.NAME, select['name']))
@@ -62,7 +64,7 @@ def test_select_by_value_single(driver, pages):
 
 @pytest.mark.xfail_firefox(reason='https://bugzilla.mozilla.org/show_bug.cgi?id=1429403')
 @pytest.mark.xfail_remote
-def test_select_disabled_by_value(driver, pages):
+def test_select_disabled_by_value(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     sel = Select(driver.find_element(By.NAME, disabledSelect['name']))
     selected = sel.first_selected_option
@@ -70,7 +72,7 @@ def test_select_disabled_by_value(driver, pages):
     assert selected == sel.first_selected_option
 
 
-def test_select_by_visible_text_single(driver, pages):
+def test_select_by_visible_text_single(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
 
     for select in [singleSelectValues1]:
@@ -86,7 +88,7 @@ def test_select_by_visible_text_single(driver, pages):
 # @pytest.mark.xfail_chromiumedge(
 #     reason='https://bugs.chromium.org/p/chromedriver/issues/detail?id=822')
 # @pytest.mark.xfail_safari
-# def test_select_by_visible_text_should_normalize_spaces(driver, pages):
+# def test_select_by_visible_text_should_normalize_spaces(driver: WebDriver, pages: Pages) -> None:
 #     pages.load("formPage.html")
 
 #     for select in [singleSelectValuesWithSpaces]:
@@ -99,7 +101,7 @@ def test_select_by_visible_text_single(driver, pages):
 
 @pytest.mark.xfail_firefox(reason='https://bugzilla.mozilla.org/show_bug.cgi?id=1429403')
 @pytest.mark.xfail_remote
-def test_select_disabled_by_visible_text(driver, pages):
+def test_select_disabled_by_visible_text(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     sel = Select(driver.find_element(By.NAME, disabledSelect['name']))
     selected = sel.first_selected_option
@@ -107,7 +109,7 @@ def test_select_disabled_by_visible_text(driver, pages):
     assert selected == sel.first_selected_option
 
 
-def test_select_by_index_multiple(driver, pages):
+def test_select_by_index_multiple(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
 
     for select in [multiSelectValues1, multiSelectValues2]:
@@ -121,7 +123,7 @@ def test_select_by_index_multiple(driver, pages):
                 assert selected[j].text == select['values'][j]
 
 
-def test_select_by_value_multiple(driver, pages):
+def test_select_by_value_multiple(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
 
     for select in [multiSelectValues1, multiSelectValues2]:
@@ -135,7 +137,7 @@ def test_select_by_value_multiple(driver, pages):
                 assert selected[j].text == select['values'][j]
 
 
-def test_select_by_visible_text_multiple(driver, pages):
+def test_select_by_visible_text_multiple(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
 
     for select in [multiSelectValues1, multiSelectValues2]:
@@ -149,14 +151,14 @@ def test_select_by_visible_text_multiple(driver, pages):
                 assert selected[j].text == select['values'][j]
 
 
-def test_deselect_all_single(driver, pages):
+def test_deselect_all_single(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     for select in [singleSelectValues1, singleSelectValues2]:
         with pytest.raises(NotImplementedError):
             Select(driver.find_element(By.NAME, select['name'])).deselect_all()
 
 
-def test_deselect_all_multiple(driver, pages):
+def test_deselect_all_multiple(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     for select in [multiSelectValues1, multiSelectValues2]:
         sel = Select(driver.find_element(By.NAME, select['name']))
@@ -164,28 +166,28 @@ def test_deselect_all_multiple(driver, pages):
         assert len(sel.all_selected_options) == 0
 
 
-def test_deselect_by_index_single(driver, pages):
+def test_deselect_by_index_single(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     for select in [singleSelectValues1, singleSelectValues2]:
         with pytest.raises(NotImplementedError):
             Select(driver.find_element(By.NAME, select['name'])).deselect_by_index(0)
 
 
-def test_deselect_by_value_single(driver, pages):
+def test_deselect_by_value_single(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     for select in [singleSelectValues1, singleSelectValues2]:
         with pytest.raises(NotImplementedError):
             Select(driver.find_element(By.NAME, select['name'])).deselect_by_value(select['values'][0].lower())
 
 
-def test_deselect_by_visible_text_single(driver, pages):
+def test_deselect_by_visible_text_single(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     for select in [singleSelectValues1, singleSelectValues2]:
         with pytest.raises(NotImplementedError):
             Select(driver.find_element(By.NAME, select['name'])).deselect_by_visible_text(select['values'][0])
 
 
-def test_deselect_by_index_multiple(driver, pages):
+def test_deselect_by_index_multiple(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     for select in [multiSelectValues1, multiSelectValues2]:
         sel = Select(driver.find_element(By.NAME, select['name']))
@@ -202,7 +204,7 @@ def test_deselect_by_index_multiple(driver, pages):
         assert selected[1].text == select['values'][2]
 
 
-def test_deselect_by_value_multiple(driver, pages):
+def test_deselect_by_value_multiple(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     for select in [multiSelectValues1, multiSelectValues2]:
         sel = Select(driver.find_element(By.NAME, select['name']))
@@ -219,7 +221,7 @@ def test_deselect_by_value_multiple(driver, pages):
         assert selected[1].text == select['values'][2]
 
 
-def test_deselect_by_visible_text_multiple(driver, pages):
+def test_deselect_by_visible_text_multiple(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     for select in [multiSelectValues1, multiSelectValues2]:
         sel = Select(driver.find_element(By.NAME, select['name']))
@@ -236,7 +238,7 @@ def test_deselect_by_visible_text_multiple(driver, pages):
         assert selected[1].text == select['values'][2]
 
 
-def test_get_options(driver, pages):
+def test_get_options(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     for select in [singleSelectValues1, singleSelectValues2, multiSelectValues1, multiSelectValues2]:
         opts = Select(driver.find_element(By.NAME, select['name'])).options
@@ -245,7 +247,7 @@ def test_get_options(driver, pages):
             assert opts[i].text == select['values'][i]
 
 
-def test_get_all_selected_options_single(driver, pages):
+def test_get_all_selected_options_single(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     for select in [singleSelectValues1, singleSelectValues2, disabledSelect]:
         opts = Select(driver.find_element(By.NAME, select['name'])).all_selected_options
@@ -253,7 +255,7 @@ def test_get_all_selected_options_single(driver, pages):
         assert opts[0].text == select['values'][0]
 
 
-def test_get_all_selected_options_multiple(driver, pages):
+def test_get_all_selected_options_multiple(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     opts = Select(driver.find_element(By.NAME, multiSelectValues1['name'])).all_selected_options
     assert len(opts) == 2
@@ -263,14 +265,14 @@ def test_get_all_selected_options_multiple(driver, pages):
     assert len(opts) == 0
 
 
-def test_get_first_selected_option_single(driver, pages):
+def test_get_first_selected_option_single(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     for select in [singleSelectValues1, singleSelectValues2]:
         opt = Select(driver.find_element(By.NAME, select['name'])).first_selected_option
         assert opt.text == select['values'][0]
 
 
-def test_get_first_selected_option_multiple(driver, pages):
+def test_get_first_selected_option_multiple(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     opt = Select(driver.find_element(By.NAME, multiSelectValues1['name'])).first_selected_option
     assert opt.text == multiSelectValues1['values'][0]
@@ -278,27 +280,27 @@ def test_get_first_selected_option_multiple(driver, pages):
     assert len(opt) == 0
 
 
-def test_raises_exception_for_invalid_tag_name(driver, pages):
+def test_raises_exception_for_invalid_tag_name(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     with pytest.raises(UnexpectedTagNameException):
         Select(driver.find_element(By.TAG_NAME, "div"))
 
 
-def test_deselect_by_index_non_existent(driver, pages):
+def test_deselect_by_index_non_existent(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     for select in [multiSelectValues1, multiSelectValues2]:
         with pytest.raises(NoSuchElementException):
             Select(driver.find_element(By.NAME, select['name'])).deselect_by_index(10)
 
 
-def test_deselect_by_value_non_existent(driver, pages):
+def test_deselect_by_value_non_existent(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     for select in [multiSelectValues1, multiSelectValues2]:
         with pytest.raises(NoSuchElementException):
             Select(driver.find_element(By.NAME, select['name'])).deselect_by_value('not there')
 
 
-def test_deselect_by_text_non_existent(driver, pages):
+def test_deselect_by_text_non_existent(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     for select in [multiSelectValues1, multiSelectValues2]:
         with pytest.raises(NoSuchElementException):

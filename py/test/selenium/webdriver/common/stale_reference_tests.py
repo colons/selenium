@@ -17,11 +17,13 @@
 
 import pytest
 
-from selenium.webdriver.common.by import By
 from selenium.common.exceptions import StaleElementReferenceException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
+from test.selenium.webdriver.common.webserver import Pages
 
 
-def test_old_page(driver, pages):
+def test_old_page(driver: WebDriver, pages: Pages) -> None:
     pages.load("simpleTest.html")
     elem = driver.find_element(by=By.ID, value="links")
     pages.load("xhtmlTest.html")
@@ -30,7 +32,7 @@ def test_old_page(driver, pages):
 
 
 @pytest.mark.xfail_safari
-def test_should_not_crash_when_calling_get_size_on_an_obsolete_element(driver, pages):
+def test_should_not_crash_when_calling_get_size_on_an_obsolete_element(driver: WebDriver, pages: Pages) -> None:
     pages.load("simpleTest.html")
     elem = driver.find_element(by=By.ID, value="links")
     pages.load("xhtmlTest.html")
@@ -39,7 +41,7 @@ def test_should_not_crash_when_calling_get_size_on_an_obsolete_element(driver, p
 
 
 @pytest.mark.xfail_safari
-def test_should_not_crash_when_querying_the_attribute_of_astale_element(driver, pages):
+def test_should_not_crash_when_querying_the_attribute_of_astale_element(driver: WebDriver, pages: Pages) -> None:
     pages.load("xhtmlTest.html")
     heading = driver.find_element(by=By.XPATH, value="//h1")
     pages.load("simpleTest.html")

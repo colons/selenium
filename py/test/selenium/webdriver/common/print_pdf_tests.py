@@ -16,13 +16,15 @@
 # under the License.
 
 from selenium.webdriver.common.print_page_options import PrintOptions
+from selenium.webdriver.remote.webdriver import WebDriver
+from test.selenium.webdriver.common.webserver import Pages
 
 START_INDEX = 0
 END_INDEX = 5
 PDF_MAGIC_NUMBER = 'JVBER'
 
 
-def test_pdf_with_2_pages(driver, pages):
+def test_pdf_with_2_pages(driver: WebDriver, pages: Pages) -> None:
     print_options = PrintOptions()
     print_options.page_ranges = ['1-2']
 
@@ -33,14 +35,14 @@ def test_pdf_with_2_pages(driver, pages):
     assert base64code[START_INDEX: END_INDEX] == PDF_MAGIC_NUMBER
 
 
-def test_pdf_with_all_pages(driver, pages):
+def test_pdf_with_all_pages(driver: WebDriver, pages: Pages) -> None:
     pages.load("printPage.html")
     base64code = driver.print_page()
 
     assert base64code[START_INDEX: END_INDEX] == PDF_MAGIC_NUMBER
 
 
-def test_valid_params(driver, pages):
+def test_valid_params(driver: WebDriver, pages: Pages) -> None:
     print_options = PrintOptions()
 
     print_options.page_ranges = ['1-2']

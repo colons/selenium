@@ -17,16 +17,18 @@
 
 import pytest
 
-from selenium.webdriver.common.actions.wheel_input import WheelInput
-from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.actions import interaction
 from selenium.webdriver.common.actions.action_builder import ActionBuilder
 from selenium.webdriver.common.actions.pointer_input import PointerInput
-from selenium.webdriver.common.actions import interaction
+from selenium.webdriver.common.actions.wheel_input import WheelInput
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
+from test.selenium.webdriver.common.webserver import Pages
 
 
-def test_should_be_able_to_get_pointer_and_keyboard_inputs(driver, pages):
+def test_should_be_able_to_get_pointer_and_keyboard_inputs(driver: WebDriver, pages: Pages) -> None:
     actions = ActionBuilder(driver)
     pointers = actions.pointer_inputs
     keyboards = actions.key_inputs
@@ -37,7 +39,7 @@ def test_should_be_able_to_get_pointer_and_keyboard_inputs(driver, pages):
 
 @pytest.mark.xfail_safari
 @pytest.mark.xfail_remote
-def test_sending_keys_to_active_element_with_modifier(driver, pages):
+def test_sending_keys_to_active_element_with_modifier(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     e = driver.find_element(By.ID, "working")
     e.click()
@@ -55,7 +57,7 @@ def test_sending_keys_to_active_element_with_modifier(driver, pages):
 
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_remote
-def test_can_create_pause_action_on_keyboard(driver, pages):
+def test_can_create_pause_action_on_keyboard(driver: WebDriver, pages: Pages) -> None:
     # If we don't get an error and takes less than 3 seconds to run, we are good
     import datetime
     start = datetime.datetime.now()
@@ -73,7 +75,7 @@ def test_can_create_pause_action_on_keyboard(driver, pages):
     actions2.perform()
 
 
-def test_can_create_pause_action_on_pointer(driver, pages):
+def test_can_create_pause_action_on_pointer(driver: WebDriver, pages: Pages) -> None:
     # If we don't get an error and takes less than 3 seconds to run, we are good
     import datetime
     start = datetime.datetime.now()
@@ -91,12 +93,12 @@ def test_can_create_pause_action_on_pointer(driver, pages):
     actions2.perform()
 
 
-def test_can_clear_actions(driver, pages):
+def test_can_clear_actions(driver: WebDriver, pages: Pages) -> None:
     actions = ActionBuilder(driver)
     actions.clear_actions()
 
 
-def test_move_and_click(driver, pages):
+def test_move_and_click(driver: WebDriver, pages: Pages) -> None:
     pages.load("javascriptPage.html")
     toClick = driver.find_element(By.ID, "clickField")
 
@@ -110,7 +112,7 @@ def test_move_and_click(driver, pages):
     assert "Clicked" == toClick.get_attribute('value')
 
 
-def test_drag_and_drop(driver, pages):
+def test_drag_and_drop(driver: WebDriver, pages: Pages) -> None:
     """Copied from org.openqa.selenium.interactions.TestBasicMouseInterface."""
     element_available_timeout = 15
     wait = WebDriverWait(driver, element_available_timeout)
@@ -135,7 +137,7 @@ def test_drag_and_drop(driver, pages):
     assert "Dropped!" == text
 
 
-def test_context_click(driver, pages):
+def test_context_click(driver: WebDriver, pages: Pages) -> None:
 
     pages.load("javascriptPage.html")
     toContextClick = driver.find_element(By.ID, "doubleClickField")
@@ -152,7 +154,7 @@ def test_context_click(driver, pages):
 @pytest.mark.xfail_safari
 @pytest.mark.xfail_remote(reason="Fails on Travis")
 @pytest.mark.xfail_chrome(reason="Fails on Travis")
-def test_double_click(driver, pages):
+def test_double_click(driver: WebDriver, pages: Pages) -> None:
     """Copied from org.openqa.selenium.interactions.TestBasicMouseInterface."""
     pages.load("javascriptPage.html")
     toDoubleClick = driver.find_element(By.ID, "doubleClickField")
@@ -166,13 +168,13 @@ def test_double_click(driver, pages):
     assert "DoubleClicked" == toDoubleClick.get_attribute('value')
 
 
-def test_dragging_element_with_mouse_moves_it_to_another_list(driver, pages):
+def test_dragging_element_with_mouse_moves_it_to_another_list(driver: WebDriver, pages: Pages) -> None:
     _perform_drag_and_drop_with_mouse(driver, pages)
     dragInto = driver.find_element(By.ID, "sortable1")
     assert 6 == len(dragInto.find_elements(By.TAG_NAME, "li"))
 
 
-def test_dragging_element_with_mouse_fires_events(driver, pages):
+def test_dragging_element_with_mouse_fires_events(driver: WebDriver, pages: Pages) -> None:
     _perform_drag_and_drop_with_mouse(driver, pages)
     dragReporter = driver.find_element(By.ID, "dragging_reports")
     assert "Nothing happened. DragOut DropIn RightItem 3" == dragReporter.text
@@ -180,7 +182,7 @@ def test_dragging_element_with_mouse_fires_events(driver, pages):
 
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_remote
-def test_pen_pointer_properties(driver, pages):
+def test_pen_pointer_properties(driver: WebDriver, pages: Pages) -> None:
     pages.load("pointerActionsPage.html")
     pointerArea = driver.find_element(By.CSS_SELECTOR, "#pointerArea")
     pointer_input = PointerInput(interaction.POINTER_PEN, "pen")
@@ -219,7 +221,7 @@ def test_pen_pointer_properties(driver, pages):
 
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_remote
-def test_touch_pointer_properties(driver, pages):
+def test_touch_pointer_properties(driver: WebDriver, pages: Pages) -> None:
     pages.load("pointerActionsPage.html")
     pointerArea = driver.find_element(By.CSS_SELECTOR, "#pointerArea")
     center = _get_inview_center(pointerArea.rect, _get_viewport_rect(driver))
@@ -262,7 +264,7 @@ def test_touch_pointer_properties(driver, pages):
 
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_remote
-def test_can_scroll_mouse_wheel(driver, pages):
+def test_can_scroll_mouse_wheel(driver: WebDriver, pages: Pages) -> None:
     pages.load("scrollingPage.html")
     driver.execute_script("document.scrollingElement.scrollTop = 0")
     scrollable = driver.find_element(By.CSS_SELECTOR, "#scrollable")
@@ -281,7 +283,7 @@ def test_can_scroll_mouse_wheel(driver, pages):
     assert events[0]["target"] == "scrollContent"
 
 
-def _perform_drag_and_drop_with_mouse(driver, pages):
+def _perform_drag_and_drop_with_mouse(driver: WebDriver, pages: Pages) -> None:
     """Copied from org.openqa.selenium.interactions.TestBasicMouseInterface."""
     pages.load("draggableLists.html")
     dragReporter = driver.find_element(By.ID, "dragging_reports")

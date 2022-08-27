@@ -16,9 +16,11 @@
 # under the License.
 
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
+from test.selenium.webdriver.common.webserver import Pages
 
 
-def test_same_element_looked_up_different_ways_should_be_equal(driver, pages):
+def test_same_element_looked_up_different_ways_should_be_equal(driver: WebDriver, pages: Pages) -> None:
     pages.load("simpleTest.html")
     body = driver.find_element(By.TAG_NAME, "body")
     xbody = driver.find_elements(By.XPATH, "//body")[0]
@@ -26,7 +28,7 @@ def test_same_element_looked_up_different_ways_should_be_equal(driver, pages):
     assert body == xbody
 
 
-def test_different_elements_are_not_equal(driver, pages):
+def test_different_elements_are_not_equal(driver: WebDriver, pages: Pages) -> None:
     pages.load("simpleTest.html")
     body = driver.find_element(By.TAG_NAME, "body")
     div = driver.find_element(By.TAG_NAME, "div")
@@ -34,7 +36,7 @@ def test_different_elements_are_not_equal(driver, pages):
     assert body != div
 
 
-def test_same_elements_found_different_ways_should_not_be_duplicated_in_aset(driver, pages):
+def test_same_elements_found_different_ways_should_not_be_duplicated_in_aset(driver: WebDriver, pages: Pages) -> None:
     pages.load("simpleTest.html")
     body = driver.find_element(By.TAG_NAME, "body")
     xbody = driver.find_elements(By.XPATH, "//body")

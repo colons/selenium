@@ -17,9 +17,12 @@
 
 import pytest
 
+from selenium.webdriver.remote.webdriver import WebDriver
+from test.selenium.webdriver.common.webserver import Pages
+
 
 @pytest.mark.no_driver_after_test
-def test_quit(driver, pages):
+def test_quit(driver: WebDriver, pages: Pages) -> None:
     driver.quit()
     with pytest.raises(Exception):
         pages.load('simpleTest.html')

@@ -24,10 +24,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.actions import interaction
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
+from test.selenium.webdriver.common.webserver import Pages
 
 
-def perform_drag_and_drop_with_mouse(driver, pages):
+def perform_drag_and_drop_with_mouse(driver: WebDriver, pages: Pages) -> None:
     """Copied from org.openqa.selenium.interactions.TestBasicMouseInterface."""
     pages.load("draggableLists.html")
     dragReporter = driver.find_element(By.ID, "dragging_reports")
@@ -50,7 +52,7 @@ def perform_drag_and_drop_with_mouse(driver, pages):
 
 
 @pytest.mark.xfail_safari
-def test_dragging_element_with_mouse_moves_it_to_another_list(driver, pages):
+def test_dragging_element_with_mouse_moves_it_to_another_list(driver: WebDriver, pages: Pages) -> None:
     """Copied from org.openqa.selenium.interactions.TestBasicMouseInterface."""
     perform_drag_and_drop_with_mouse(driver, pages)
     dragInto = driver.find_element(By.ID, "sortable1")
@@ -58,7 +60,7 @@ def test_dragging_element_with_mouse_moves_it_to_another_list(driver, pages):
 
 
 @pytest.mark.xfail_safari
-def test_dragging_element_with_mouse_fires_events(driver, pages):
+def test_dragging_element_with_mouse_fires_events(driver: WebDriver, pages: Pages) -> None:
     """Copied from org.openqa.selenium.interactions.TestBasicMouseInterface."""
     perform_drag_and_drop_with_mouse(driver, pages)
     dragReporter = driver.find_element(By.ID, "dragging_reports")
@@ -75,7 +77,7 @@ def _is_element_available(driver, id):
 
 
 @pytest.mark.xfail_safari
-def test_drag_and_drop(driver, pages):
+def test_drag_and_drop(driver: WebDriver, pages: Pages) -> None:
     """Copied from org.openqa.selenium.interactions.TestBasicMouseInterface."""
     element_available_timeout = 15
     wait = WebDriverWait(driver, element_available_timeout)
@@ -104,7 +106,7 @@ def test_drag_and_drop(driver, pages):
 
 
 @pytest.mark.xfail_safari
-def test_double_click(driver, pages):
+def test_double_click(driver: WebDriver, pages: Pages) -> None:
     """Copied from org.openqa.selenium.interactions.TestBasicMouseInterface."""
     pages.load("javascriptPage.html")
     toDoubleClick = driver.find_element(By.ID, "doubleClickField")
@@ -116,7 +118,7 @@ def test_double_click(driver, pages):
     assert "DoubleClicked" == toDoubleClick.get_attribute('value')
 
 
-def test_context_click(driver, pages):
+def test_context_click(driver: WebDriver, pages: Pages) -> None:
     """Copied from org.openqa.selenium.interactions.TestBasicMouseInterface."""
     pages.load("javascriptPage.html")
     toContextClick = driver.find_element(By.ID, "doubleClickField")
@@ -128,7 +130,7 @@ def test_context_click(driver, pages):
     assert "ContextClicked" == toContextClick.get_attribute('value')
 
 
-def test_move_and_click(driver, pages):
+def test_move_and_click(driver: WebDriver, pages: Pages) -> None:
     """Copied from org.openqa.selenium.interactions.TestBasicMouseInterface."""
     pages.load("javascriptPage.html")
     toClick = driver.find_element(By.ID, "clickField")
@@ -141,7 +143,7 @@ def test_move_and_click(driver, pages):
     assert "Clicked" == toClick.get_attribute('value')
 
 
-def test_cannot_move_to_anull_locator(driver, pages):
+def test_cannot_move_to_anull_locator(driver: WebDriver, pages: Pages) -> None:
     """Copied from org.openqa.selenium.interactions.TestBasicMouseInterface."""
     pages.load("javascriptPage.html")
 
@@ -152,7 +154,7 @@ def test_cannot_move_to_anull_locator(driver, pages):
 
 
 @pytest.mark.xfail_safari
-def test_clicking_on_form_elements(driver, pages):
+def test_clicking_on_form_elements(driver: WebDriver, pages: Pages) -> None:
     """Copied from org.openqa.selenium.interactions.CombinedInputActionsTest."""
     pages.load("formSelectionPage.html")
     options = driver.find_elements(By.TAG_NAME, "option")
@@ -172,7 +174,7 @@ def test_clicking_on_form_elements(driver, pages):
 
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_safari
-def test_selecting_multiple_items(driver, pages):
+def test_selecting_multiple_items(driver: WebDriver, pages: Pages) -> None:
     """Copied from org.openqa.selenium.interactions.CombinedInputActionsTest."""
     pages.load("selectableItems.html")
     reportingElement = driver.find_element(By.ID, "infodiv")
@@ -196,7 +198,7 @@ def test_selecting_multiple_items(driver, pages):
 
 
 @pytest.mark.xfail_safari
-def test_sending_keys_to_active_element_with_modifier(driver, pages):
+def test_sending_keys_to_active_element_with_modifier(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     e = driver.find_element(By.ID, "working")
     e.click()
@@ -210,7 +212,7 @@ def test_sending_keys_to_active_element_with_modifier(driver, pages):
     assert "ABC" == e.get_attribute('value')
 
 
-def test_sending_keys_to_element(driver, pages):
+def test_sending_keys_to_element(driver: WebDriver, pages: Pages) -> None:
     pages.load("formPage.html")
     e = driver.find_element(By.ID, "working")
 
@@ -219,7 +221,7 @@ def test_sending_keys_to_element(driver, pages):
     assert "abc" == e.get_attribute('value')
 
 
-def test_can_send_keys_between_clicks(driver, pages):
+def test_can_send_keys_between_clicks(driver: WebDriver, pages: Pages) -> None:
     """
     For W3C, ensures that the correct number of pauses are given to the other
     input device.
@@ -243,7 +245,7 @@ def test_can_reset_interactions(driver):
     assert all(len(device.actions) == 0 for device in actions.w3c_actions.devices)
 
 
-def test_can_pause(driver, pages):
+def test_can_pause(driver: WebDriver, pages: Pages) -> None:
     from time import time
     pages.load("javascriptPage.html")
 
@@ -264,7 +266,7 @@ def test_can_pause(driver, pages):
 
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_remote
-def test_can_scroll_to_element(driver, pages):
+def test_can_scroll_to_element(driver: WebDriver, pages: Pages) -> None:
     pages.load("scrolling_tests/frame_with_nested_scrolling_frame_out_of_view.html")
     iframe = driver.find_element(By.TAG_NAME, "iframe")
 
@@ -277,7 +279,7 @@ def test_can_scroll_to_element(driver, pages):
 
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_remote
-def test_can_scroll_from_element_by_amount(driver, pages):
+def test_can_scroll_from_element_by_amount(driver: WebDriver, pages: Pages) -> None:
     pages.load("scrolling_tests/frame_with_nested_scrolling_frame_out_of_view.html")
     iframe = driver.find_element(By.TAG_NAME, "iframe")
     scroll_origin = ScrollOrigin.from_element(iframe)
@@ -291,7 +293,7 @@ def test_can_scroll_from_element_by_amount(driver, pages):
 
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_remote
-def test_can_scroll_from_element_with_offset_by_amount(driver, pages):
+def test_can_scroll_from_element_with_offset_by_amount(driver: WebDriver, pages: Pages) -> None:
     pages.load("scrolling_tests/frame_with_nested_scrolling_frame_out_of_view.html")
     footer = driver.find_element(By.TAG_NAME, "footer")
     scroll_origin = ScrollOrigin.from_element(footer, 0, -50)
@@ -306,7 +308,7 @@ def test_can_scroll_from_element_with_offset_by_amount(driver, pages):
 
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_remote
-def test_errors_when_element_offset_not_in_viewport(driver, pages):
+def test_errors_when_element_offset_not_in_viewport(driver: WebDriver, pages: Pages) -> None:
     pages.load("scrolling_tests/frame_with_nested_scrolling_frame_out_of_view.html")
     footer = driver.find_element(By.TAG_NAME, "footer")
     scroll_origin = ScrollOrigin.from_element(footer, 0, 50)
@@ -317,7 +319,7 @@ def test_errors_when_element_offset_not_in_viewport(driver, pages):
 
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_remote
-def test_can_scroll_from_viewport_by_amount(driver, pages):
+def test_can_scroll_from_viewport_by_amount(driver: WebDriver, pages: Pages) -> None:
     pages.load("scrolling_tests/frame_with_nested_scrolling_frame_out_of_view.html")
     footer = driver.find_element(By.TAG_NAME, "footer")
     delta_y = footer.rect['y']
@@ -329,7 +331,7 @@ def test_can_scroll_from_viewport_by_amount(driver, pages):
 
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_remote
-def test_can_scroll_from_viewport_with_offset_by_amount(driver, pages):
+def test_can_scroll_from_viewport_with_offset_by_amount(driver: WebDriver, pages: Pages) -> None:
     pages.load("scrolling_tests/frame_with_nested_scrolling_frame.html")
     scroll_origin = ScrollOrigin.from_viewport(10, 10)
 
@@ -343,7 +345,7 @@ def test_can_scroll_from_viewport_with_offset_by_amount(driver, pages):
 
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_remote
-def test_errors_when_origin_offset_not_in_viewport(driver, pages):
+def test_errors_when_origin_offset_not_in_viewport(driver: WebDriver, pages: Pages) -> None:
     pages.load("scrolling_tests/frame_with_nested_scrolling_frame.html")
     scroll_origin = ScrollOrigin.from_viewport(-10, -10)
 

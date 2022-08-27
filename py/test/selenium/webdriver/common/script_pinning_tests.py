@@ -20,9 +20,11 @@ import pytest
 
 from selenium.common.exceptions import JavascriptException
 from selenium.webdriver.remote.script_key import ScriptKey
+from selenium.webdriver.remote.webdriver import WebDriver
+from test.selenium.webdriver.common.webserver import Pages
 
 
-def test_should_allow_script_pinning(driver, pages):
+def test_should_allow_script_pinning(driver: WebDriver, pages: Pages) -> None:
     pages.load("simpleTest.html")
     driver.pinned_scripts = {}
     script_key = driver.pin_script("return 'i like cheese';")
@@ -32,7 +34,7 @@ def test_should_allow_script_pinning(driver, pages):
     assert result == 'i like cheese'
 
 
-def test_should_allow_pinned_scripts_to_take_arguments(driver, pages):
+def test_should_allow_pinned_scripts_to_take_arguments(driver: WebDriver, pages: Pages) -> None:
     pages.load("simpleTest.html")
     driver.pinned_scripts = {}
     hello = driver.pin_script("return arguments[0]")
@@ -42,7 +44,7 @@ def test_should_allow_pinned_scripts_to_take_arguments(driver, pages):
     assert result == "cheese"
 
 
-def test_should_list_all_pinned_scripts(driver, pages):
+def test_should_list_all_pinned_scripts(driver: WebDriver, pages: Pages) -> None:
     pages.load("simpleTest.html")
     driver.pinned_scripts = {}
     expected = []
@@ -54,7 +56,7 @@ def test_should_list_all_pinned_scripts(driver, pages):
     assert expected == result
 
 
-def test_should_allow_scripts_to_be_unpinned(driver, pages):
+def test_should_allow_scripts_to_be_unpinned(driver: WebDriver, pages: Pages) -> None:
     pages.load("simpleTest.html")
     driver.pinned_scripts = {}
     cheese = driver.pin_script("return 'cheese';")
@@ -63,7 +65,7 @@ def test_should_allow_scripts_to_be_unpinned(driver, pages):
     assert cheese not in results
 
 
-def test_calling_unpinned_script_causes_error(driver, pages):
+def test_calling_unpinned_script_causes_error(driver: WebDriver, pages: Pages) -> None:
     pages.load("simpleTest.html")
     cheese = driver.pin_script("return 'brie';")
     driver.unpin(cheese)
@@ -71,7 +73,7 @@ def test_calling_unpinned_script_causes_error(driver, pages):
         driver.execute_script(cheese)
 
 
-def test_unpinning_non_existing_script_raises(driver, pages):
+def test_unpinning_non_existing_script_raises(driver: WebDriver, pages: Pages) -> None:
     pages.load("simpleTest.html")
     with pytest.raises(KeyError, match=re.escape(r"No script with key: ScriptKey(id=1) existed in {}")):
         driver.unpin(ScriptKey(1))

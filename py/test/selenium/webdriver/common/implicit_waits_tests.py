@@ -19,9 +19,11 @@ import pytest
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
+from test.selenium.webdriver.common.webserver import Pages
 
 
-def test_should_implicitly_wait_for_asingle_element(driver, pages):
+def test_should_implicitly_wait_for_asingle_element(driver: WebDriver, pages: Pages) -> None:
     pages.load("dynamic.html")
     add = driver.find_element(By.ID, "adder")
     driver.implicitly_wait(3)
@@ -29,14 +31,14 @@ def test_should_implicitly_wait_for_asingle_element(driver, pages):
     driver.find_element(By.ID, "box0")  # All is well if this doesn't throw.
 
 
-def test_should_still_fail_to_find_an_element_when_implicit_waits_are_enabled(driver, pages):
+def test_should_still_fail_to_find_an_element_when_implicit_waits_are_enabled(driver: WebDriver, pages: Pages) -> None:
     pages.load("dynamic.html")
     driver.implicitly_wait(0.5)
     with pytest.raises(NoSuchElementException):
         driver.find_element(By.ID, "box0")
 
 
-def test_should_return_after_first_attempt_to_find_one_after_disabling_implicit_waits(driver, pages):
+def test_should_return_after_first_attempt_to_find_one_after_disabling_implicit_waits(driver: WebDriver, pages: Pages) -> None:
     pages.load("dynamic.html")
     driver.implicitly_wait(3)
     driver.implicitly_wait(0)
@@ -44,7 +46,7 @@ def test_should_return_after_first_attempt_to_find_one_after_disabling_implicit_
         driver.find_element(By.ID, "box0")
 
 
-def test_should_implicitly_wait_until_at_least_one_element_is_found_when_searching_for_many(driver, pages):
+def test_should_implicitly_wait_until_at_least_one_element_is_found_when_searching_for_many(driver: WebDriver, pages: Pages) -> None:
     pages.load("dynamic.html")
     add = driver.find_element(By.ID, "adder")
 
@@ -56,7 +58,7 @@ def test_should_implicitly_wait_until_at_least_one_element_is_found_when_searchi
     assert len(elements) >= 1
 
 
-def test_should_still_fail_to_find_an_elemenst_when_implicit_waits_are_enabled(driver, pages):
+def test_should_still_fail_to_find_an_elemenst_when_implicit_waits_are_enabled(driver: WebDriver, pages: Pages) -> None:
     pages.load("dynamic.html")
 
     driver.implicitly_wait(0.5)
@@ -64,7 +66,7 @@ def test_should_still_fail_to_find_an_elemenst_when_implicit_waits_are_enabled(d
     assert 0 == len(elements)
 
 
-def test_should_return_after_first_attempt_to_find_many_after_disabling_implicit_waits(driver, pages):
+def test_should_return_after_first_attempt_to_find_many_after_disabling_implicit_waits(driver: WebDriver, pages: Pages) -> None:
     pages.load("dynamic.html")
     add = driver.find_element(By.ID, "adder")
     driver.implicitly_wait(1.1)

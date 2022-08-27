@@ -17,7 +17,9 @@
 
 
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
+from test.selenium.webdriver.common.webserver import Pages
 
 
 def test_should_implement_repr_for_web_driver(driver):
@@ -26,11 +28,12 @@ def test_should_implement_repr_for_web_driver(driver):
     assert driver.session_id in driver_repr
 
 
-def test_should_implement_repr_for_web_element(driver, pages):
+def test_should_implement_repr_for_web_element(driver: WebDriver, pages: Pages) -> None:
     pages.load('simpleTest.html')
     elem = driver.find_element(By.ID, "validImgTag")
     elem_repr = repr(elem)
     assert type(elem).__name__ in elem_repr
+    assert driver.session_id is not None
     assert driver.session_id in elem_repr
     assert elem._id in elem_repr
 

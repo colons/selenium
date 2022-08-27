@@ -22,25 +22,28 @@
 # from selenium.webdriver.support.wait import WebDriverWait
 # from selenium.webdriver.support import expected_conditions as EC
 
+from selenium.webdriver.remote.webdriver import WebDriver
+from test.selenium.webdriver.common.webserver import Pages
 
-def test_should_wait_for_document_to_be_loaded(driver, pages):
+
+def test_should_wait_for_document_to_be_loaded(driver: WebDriver, pages: Pages) -> None:
     pages.load("simpleTest.html")
     assert driver.title == "Hello WebDriver"
 
 
 # Disabled till Java WebServer is used
-# def test_should_follow_redirects_sent_in_the_http_response_headers(driver, pages):
+# def test_should_follow_redirects_sent_in_the_http_response_headers(driver: WebDriver, pages: Pages) -> None:
 #    pages.load("redirect.html")
 #    assert driver.title == "We Arrive Here"
 
 
 # Disabled till the Java WebServer is used
-# def test_should_follow_meta_redirects(driver, pages):
+# def test_should_follow_meta_redirects(driver: WebDriver, pages: Pages) -> None:
 #    pages.load("metaRedirect.html")
 #    assert driver.title == "We Arrive Here"
 
 
-# def test_should_be_able_to_get_afragment_on_the_current_page(driver, pages):
+# def test_should_be_able_to_get_afragment_on_the_current_page(driver: WebDriver, pages: Pages) -> None:
 #     pages.load("xhtmlTest.html")
 #     location = driver.current_url
 #     driver.get(location + "#text")
@@ -82,7 +85,7 @@ def test_should_wait_for_document_to_be_loaded(driver, pages):
 
 
 # @pytest.mark.xfail_safari
-# def test_should_be_able_to_navigate_back_in_the_browser_history(driver, pages):
+# def test_should_be_able_to_navigate_back_in_the_browser_history(driver: WebDriver, pages: Pages) -> None:
 #     pages.load("formPage.html")
 
 #     driver.find_element(by=By.ID, value="imageButton").submit()
@@ -93,7 +96,7 @@ def test_should_wait_for_document_to_be_loaded(driver, pages):
 
 
 # @pytest.mark.xfail_safari
-# def test_should_be_able_to_navigate_back_in_the_browser_history_in_presence_of_iframes(driver, pages):
+# def test_should_be_able_to_navigate_back_in_the_browser_history_in_presence_of_iframes(driver: WebDriver, pages: Pages) -> None:
 #     pages.load("xhtmlTest.html")
 
 #     driver.find_element(by=By.NAME, value="sameWindow").click()
@@ -104,7 +107,7 @@ def test_should_wait_for_document_to_be_loaded(driver, pages):
 #     assert driver.title == "XHTML Test Page"
 
 
-# def test_should_be_able_to_navigate_forwards_in_the_browser_history(driver, pages):
+# def test_should_be_able_to_navigate_forwards_in_the_browser_history(driver: WebDriver, pages: Pages) -> None:
 #     pages.load("formPage.html")
 
 #     driver.find_element(by=By.ID, value="imageButton").submit()
@@ -122,12 +125,12 @@ def test_should_wait_for_document_to_be_loaded(driver, pages):
 # @pytest.mark.xfail_remote(run=False)
 # @pytest.mark.xfail_chrome(run=False)
 # @pytest.mark.xfail_chromiumedge(run=False)
-# def test_should_not_hang_if_document_open_call_is_never_followed_by_document_close_call(driver, pages):
+# def test_should_not_hang_if_document_open_call_is_never_followed_by_document_close_call(driver: WebDriver, pages: Pages) -> None:
 #     pages.load("document_write_in_onload.html")
 #     driver.find_element(By.XPATH, "//body")
 
 
-# def test_should_be_able_to_refresh_apage(driver, pages):
+# def test_should_be_able_to_refresh_apage(driver: WebDriver, pages: Pages) -> None:
 #     pages.load("xhtmlTest.html")
 
 #     driver.refresh()

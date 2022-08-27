@@ -15,16 +15,17 @@
 # specific language governing permissions and limitations
 # under the License.
 
-from typing import List
+from typing import List, Optional
 import pytest
 from base64 import b64decode, urlsafe_b64decode, urlsafe_b64encode
 
 from selenium.common.exceptions import InvalidArgumentException
-from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.virtual_authenticator import (
     Credential,
     VirtualAuthenticatorOptions,
 )
+from selenium.webdriver.remote.webdriver import WebDriver
+from test.selenium.webdriver.common.webserver import Pages
 
 
 # working Key
@@ -114,7 +115,7 @@ def not_allowed_error_in(response) -> bool:
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_safari
 @pytest.mark.xfail_remote
-def test_add_and_remove_virtual_authenticator(driver, pages):
+def test_add_and_remove_virtual_authenticator(driver: WebDriver, pages: Pages) -> None:
     driver = create_rk_disabled_ctap2_authenticator(driver)
     driver.get(pages.url("virtual-authenticator.html", localhost=True))
 
@@ -132,7 +133,7 @@ def test_add_and_remove_virtual_authenticator(driver, pages):
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_safari
 @pytest.mark.xfail_remote
-def test_add_and_remove_non_resident_credentials(driver, pages):
+def test_add_and_remove_non_resident_credentials(driver: WebDriver, pages: Pages) -> None:
     driver = create_rk_disabled_ctap2_authenticator(driver)
 
     driver.get(pages.url("virtual-authenticator.html", localhost=True))
@@ -156,7 +157,7 @@ def test_add_and_remove_non_resident_credentials(driver, pages):
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_safari
 @pytest.mark.xfail_remote
-def test_add_non_resident_credential_when_authenticator_uses_u2f_protocol(driver, pages):
+def test_add_non_resident_credential_when_authenticator_uses_u2f_protocol(driver: WebDriver, pages: Pages) -> None:
     driver = create_rk_disabled_u2f_authenticator(driver)
     driver.get(pages.url("virtual-authenticator.html", localhost=True))
 
@@ -181,7 +182,7 @@ def test_add_non_resident_credential_when_authenticator_uses_u2f_protocol(driver
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_safari
 @pytest.mark.xfail_remote
-def test_add_resident_credential_not_supported_when_authenticator_uses_u2f_protocol(driver, pages):
+def test_add_resident_credential_not_supported_when_authenticator_uses_u2f_protocol(driver: WebDriver, pages: Pages) -> None:
     driver = create_rk_enabled_u2f_authenticator(driver)
     driver.get(pages.url("virtual-authenticator.html", localhost=True))
 
@@ -207,7 +208,7 @@ def test_add_resident_credential_not_supported_when_authenticator_uses_u2f_proto
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_safari
 @pytest.mark.xfail_remote
-def test_get_credentials(driver, pages):
+def test_get_credentials(driver: WebDriver, pages: Pages) -> None:
     driver = create_rk_enabled_ctap2_authenticator(driver)
     driver.get(pages.url("virtual-authenticator.html", localhost=True))
 
@@ -228,23 +229,26 @@ def test_get_credentials(driver, pages):
     credentials = driver.get_credentials()
     assert len(credentials) == 2
 
-    credential1, credential2 = None, None
+    credential1: Optional[Credential] = None
+    credential2: Optional[Credential] = None
 
     for credential in credentials:
         # Using startswith because there can be padding difference '==' or '=' in the end
         if credential.id.startswith(extract_id(response1)):
-            credential1: Credential = credential
+            credential1 = credential
         elif credential.id.startswith(extract_id(response2)):
-            credential2: Credential = credential
+            credential2 = credential
         else:
-            assert False, "Unknown credential"
+            raise AssertionError("Unknown credential")
 
+    assert credential1 is not None, "Credential1's ID was not found in the responses"
     assert credential1.is_resident_credential, "Credential1 should be resident credential"
     assert credential1.private_key is not None, "Credential1 should have private key"
     assert credential1.rp_id == "localhost"
     assert credential1.user_handle == urlsafe_b64encode(bytearray({1})).decode()
     assert credential1.sign_count == 1
 
+    assert credential2 is not None, "Credential2's ID was not found in the responses"
     assert credential2.is_resident_credential is False, "Credential2 should not be resident credential"
     assert credential2.private_key is not None, "Credential2 should have private key"
     # Non-resident credentials don't save RP ID
@@ -258,7 +262,7 @@ def test_get_credentials(driver, pages):
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_safari
 @pytest.mark.xfail_remote
-def test_remove_credential_by_raw_Id(driver, pages):
+def test_remove_credential_by_raw_Id(driver: WebDriver, pages: Pages) -> None:
     driver = create_rk_disabled_u2f_authenticator(driver)
     driver.get(pages.url("virtual-authenticator.html", localhost=True))
 
@@ -279,7 +283,7 @@ def test_remove_credential_by_raw_Id(driver, pages):
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_safari
 @pytest.mark.xfail_remote
-def test_remove_credential_by_b64_urlId(driver, pages):
+def test_remove_credential_by_b64_urlId(driver: WebDriver, pages: Pages) -> None:
     driver = create_rk_disabled_u2f_authenticator(driver)
     driver.get(pages.url("virtual-authenticator.html", localhost=True))
 
@@ -301,7 +305,7 @@ def test_remove_credential_by_b64_urlId(driver, pages):
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_safari
 @pytest.mark.xfail_remote
-def test_remove_all_credentials(driver, pages):
+def test_remove_all_credentials(driver: WebDriver, pages: Pages) -> None:
     driver = create_rk_disabled_u2f_authenticator(driver)
 
     driver.get(pages.url("virtual-authenticator.html", localhost=True))
@@ -335,7 +339,7 @@ def test_remove_all_credentials(driver, pages):
 @pytest.mark.xfail_firefox
 @pytest.mark.xfail_safari
 @pytest.mark.xfail_remote
-def test_set_user_verified(driver, pages):
+def test_set_user_verified(driver: WebDriver, pages: Pages) -> None:
     driver = create_rk_enabled_ctap2_authenticator(driver)
     driver.get(pages.url("virtual-authenticator.html", localhost=True))
 
