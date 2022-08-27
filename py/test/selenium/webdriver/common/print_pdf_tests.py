@@ -47,7 +47,7 @@ def test_valid_params(driver: WebDriver, pages: Pages) -> None:
 
     print_options.page_ranges = ['1-2']
     print_options.orientation = 'landscape'
-    print_options.width = 30
+    print_options.page_width = 30
 
     pages.load("printPage.html")
     base64code = driver.print_page(print_options)
